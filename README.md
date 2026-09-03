@@ -1,4 +1,4 @@
-# ⚙️ System.Monitor_Slots | Engenharia de Dados e CX Preditivo
+# ⚙️ System.Monitor_Slots | Engenharia de Dados 
 
 ![Status](https://img.shields.io/badge/Status-MVP_Operacional-brightgreen?style=for-the-badge)
 ![Desafio](https://img.shields.io/badge/Desafio-DIO_GenAI-blue?style=for-the-badge)
