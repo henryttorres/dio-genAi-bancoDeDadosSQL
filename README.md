@@ -1,4 +1,4 @@
-# ⚙️ System.Monitor_Slots | Engenharia de Dados 
+# ⚙️ System.Monitor_Slots | Engenharia de Dados & Deep Learning
 
 ![Status](https://img.shields.io/badge/Status-MVP_Operacional-brightgreen?style=for-the-badge)
 ![Desafio](https://img.shields.io/badge/Desafio-DIO_GenAI-blue?style=for-the-badge)
@@ -59,7 +59,7 @@ O MVP não realiza disparos automáticos. A solução identifica oportunidades, 
 - Preparação para Google Sheets e Grafana;
 - Formação de histórico para modelos preditivos.
 
-### 2. Automação operacional e CX
+### 2. Automação operacional
 
 - Validação de turnos elegíveis;
 - Soma de vagas por praça;
@@ -225,9 +225,9 @@ Painéis sugeridos:
 - Canal recomendado;
 - Resultado antes e depois da prospecção.
 
-## 💬 CX e humanização
+## 💬 DX e humanização
 
-A camada de CX deverá produzir mensagens:
+A camada de DX ( Driver Experience) deverá produzir mensagens:
 
 - Diretas e acolhedoras;
 - Coerentes com o jeitinho iFood;
