@@ -1,4 +1,4 @@
-# ⚙️ System.Monitor_Slots | Engenharia de Dados | Deep Learning
+# ⚙️ System.Monitor_Slots | Engenharia de Dados | AI Deep Learning
 
 ![Status](https://img.shields.io/badge/Status-MVP_Operacional-brightgreen?style=for-the-badge)
 ![Desafio](https://img.shields.io/badge/Desafio-DIO_GenAI-blue?style=for-the-badge)
