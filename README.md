@@ -6,9 +6,10 @@
 ![Dados](https://img.shields.io/badge/Dados-Time--Series-7B61FF?style=for-the-badge)
 ![CX](https://img.shields.io/badge/CX-Blip_Desk_%26_Portal-EA1D2C?style=for-the-badge)
 
-*** O prompt final para o curso se encontra no diretório "IA E PROMPTS", com o nome de "prompt_dados_final.md".***
 
 > **“A principal transformação não está em mover uma planilha para outro local, mas em substituir um modelo de verificação manual por uma operação orientada a dados e observabilidade contínua.”**
+
+*** O prompt final para o curso se encontra no diretório "IA E PROMPTS", com o nome de "prompt_dados_final.md".***
 
 ## 🎯 Visão do projeto
 
