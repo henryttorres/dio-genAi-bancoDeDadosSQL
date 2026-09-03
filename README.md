@@ -4,7 +4,7 @@
 ![Desafio](https://img.shields.io/badge/Desafio-DIO_GenAI-blue?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-Automação-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Dados](https://img.shields.io/badge/Dados-Time--Series-7B61FF?style=for-the-badge)
-![CX](https://img.shields.io/badge/CX-Blip_Desk_%26_Portal-EA1D2C?style=for-the-badge)
+![DX](https://img.shields.io/badge/CX-Blip_Desk_%26_Portal-EA1D2C?style=for-the-badge)
 
 > **“A principal transformação não está em mover uma planilha para outro local, mas em substituir um modelo de verificação manual por uma operação orientada a dados e observabilidade contínua.”**
 
