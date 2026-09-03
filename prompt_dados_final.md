@@ -1,4 +1,4 @@
-# Engenharia de Dados e CX Preditivo | Projeto Rodar em Loja iFood
+# Engenharia de Dados | Projeto Rodar em Loja iFood | Deep Learning
 
 ## Papel do agente
 
