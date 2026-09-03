@@ -1,0 +1,4 @@
+data,hora,praca,loja,operacao,inicio_turno,fim_turno,vagas_solicitadas,vagas_reservadas,vagas_livres
+2026-09-03,10:00,Recife,Loja Centro,Food,10:00,23:00,12,9,3
+2026-09-03,10:00,Recife,Loja Norte,Food,10:00,23:00,8,7,1
+2026-09-03,10:00,Campinas,Loja Cambui,Online,10:00,23:00,10,9,1

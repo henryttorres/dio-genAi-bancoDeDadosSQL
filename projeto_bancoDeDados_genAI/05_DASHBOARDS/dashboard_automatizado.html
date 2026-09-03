@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <title>HUD Operacional</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <style>
+        :root {
+            --bg: #09090b; --surface: #18181b; --surface-hover: #27272a; --border: #3f3f46;
+            --text: #f4f4f5; --muted: #a1a1aa; 
+            --ifood-red: #ea1d2c; --ifood-red-glow: rgba(234, 29, 44, 0.2);
+            --stark-blue: #0ea5e9; --green: #22c55e; --yellow: #eab308;
+            --radius: 8px; --font: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: var(--font); padding: 20px; font-size: 14px; }
+        
+        /* Layout Grid */
+        .dashboard { max-width: 1600px; margin: 0 auto; display: grid; gap: 20px; }
+        header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .title-group h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.5px; }
+        .title-group .eyebrow { color: var(--ifood-red); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .status-indicator { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+        .dot.online { background: var(--stark-blue); box-shadow: 0 0 8px var(--stark-blue); }
+        
+        /* Controls & Toolbar */
+        .toolbar { display: flex; gap: 15px; background: var(--surface); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border); }
+        .input-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .input-group label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; }
+        input, select { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 6px; font-family: var(--font); outline: none; transition: border 0.2s; }
+        input:focus, select:focus { border-color: var(--ifood-red); }
+        .btn { background: var(--ifood-red); color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font); }
+        .btn:hover { box-shadow: 0 0 12px var(--ifood-red-glow); filter: brightness(1.1); }
+        .btn.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn.outline:hover { background: var(--surface-hover); box-shadow: none; }
+
+        /* KPIs */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .kpi-card { background: var(--surface); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--border); }
+        .kpi-card.urgent::before { background: var(--ifood-red); }
+        .kpi-card.healthy::before { background: var(--green); }
+        .kpi-label { color: var(--muted); font-size: 12px; font-weight: 500; }
+        .kpi-value { font-size: 32px; font-weight: 700; margin: 8px 0 4px; }
+        
+        /* Main Workspace */
+        .workspace { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; }
+        .panel-header h2 { font-size: 16px; font-weight: 600; }
+        
+        /* Chart & Table */
+        .chart-container { height: 250px; width: 100%; }
+        .table-wrapper { overflow-y: auto; max-height: 400px; border: 1px solid var(--border); border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: var(--bg); color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; padding: 12px; position: sticky; top: 0; z-index: 1; border-bottom: 1px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+        tr:hover td { background: var(--surface-hover); }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge.red { background: rgba(234, 29, 44, 0.15); color: #f87171; }
+        .badge.yellow { background: rgba(234, 179, 8, 0.15); color: #facc15; }
+        .badge.green { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+
+        /* CX Generator */
+        .cx-module { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 15px; }
+        .cx-var-label { font-size: 11px; font-weight: 700; color: var(--stark-blue); margin-bottom: 6px; text-transform: uppercase; }
+        .cx-textarea { width: 100%; background: transparent; border: none; color: var(--text); font-family: var(--font); font-size: 13px; line-height: 1.5; resize: none; outline: none; margin-bottom: 15px; }
+        
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <div class="title-group">
+            <div class="eyebrow">DX • Inteligência Logística</div>
+            <h1>Sys.Monitor_Slots</h1>
+        </div>
+        <div class="status-indicator">
+            <span id="status-dot" class="dot"></span>
+            <span id="status-text">Aguardando Ingestão de Dados</span>
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="input-group">
+            <label>Sincronizar via URL (Google Sheets / API)</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="csv-url" placeholder="Insira a URL do CSV Público" style="flex: 1;">
+                <button class="btn" onclick="fetchData()">Sincronizar</button>
+            </div>
+        </div>
+        <div class="input-group" style="flex: 0.5;">
+            <label>Upload Manual</label>
+            <input type="file" id="csv-file" accept=".csv" onchange="handleFileUpload(event)">
+        </div>
+        <div class="input-group" style="flex: 0.3; justify-content: flex-end;">
+            <button class="btn outline" onclick="loadMockData()">Carregar Exemplo</button>
+        </div>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card" id="kpi-planejadas">
+            <div class="kpi-label">Vagas Planejadas</div>
+            <div class="kpi-value" id="val-planejadas">0</div>
+        </div>
+        <div class="kpi-card healthy" id="kpi-preenchidas">
+            <div class="kpi-label">Vagas Preenchidas</div>
+            <div class="kpi-value" id="val-preenchidas">0</div>
+        </div>
+        <div class="kpi-card urgent" id="kpi-livres">
+            <div class="kpi-label">Vagas Livres (Oportunidade)</div>
+            <div class="kpi-value" id="val-livres">0</div>
+        </div>
+        <div class="kpi-card" id="kpi-taxa">
+            <div class="kpi-label">Taxa de Ocupação</div>
+            <div class="kpi-value" id="val-taxa">0%</div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <!-- Esquerda: Dados e Gráficos -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Volatilidade Temporal</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="filter-praca" onchange="applyFilters()"><option value="">Todas as Praças</option></select>
+                        <select id="filter-data" onchange="applyFilters()"><option value="">Todas as Datas</option></select>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Auditoria Operacional</h2>
+                    <button class="btn outline" onclick="exportFilteredData()" style="padding: 6px 12px; font-size: 12px;">Exportar CSV</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Hora</th>
+                                <th>Praça</th>
+                                <th>Plan.</th>
+                                <th>Preen.</th>
+                                <th>Livres</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Renderizado via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direita: Agente CX e Recomendações -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="panel">
+                <h2>Decisão Operacional</h2>
+                <div id="decision-box" style="padding: 15px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border);">
+                    <span class="badge" style="background: var(--surface-hover); color: var(--muted);">Aguardando Dados</span>
+                    <p style="margin-top: 10px; color: var(--muted); font-size: 13px;">Carregue a base para analisar elegibilidade e canal de disparo.</p>
+                </div>
+            </div>
+
+            <div class="panel" style="flex: 1;">
+                <h2>Agente Cowork: Blip Desk</h2>
+                <p style="color: var(--muted); font-size: 12px; margin-bottom: 10px;">Conteúdo formatado estritamente para os templates oficiais (Variáveis 1 e 2).</p>
+                
+                <div class="cx-module">
+                    <div class="cx-var-label">{1} Acolhimento / Contexto</div>
+                    <textarea id="cx-var1" class="cx-textarea" rows="2" readonly></textarea>
+                    
+                    <div class="cx-var-label" style="border-top: 1px solid var(--border); padding-top: 10px;">{2} Resolução / Instrução</div>
+                    <textarea id="cx-var2" class="cx-textarea" rows="4" readonly></textarea>
+                </div>
+                
+                <button class="btn" style="width: 100%; margin-top: auto;" onclick="generateCXMessage()">Gerar Devolutiva</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let rawData = [];
+    let filteredData = [];
+    let chartInstance = null;
+
+    // --- Core Data Processing ---
+    function normalizeData(data) {
+        return data.map(row => {
+            const getField = (...keys) => {
+                for (let key of keys) {
+                    const found = Object.keys(row).find(k => k.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim() === key);
+                    if (found) return row[found];
+                }
+                return '';
+            };
+
+            const parseNum = val => {
+                const n = Number(String(val || 0).replace(',', '.'));
+                return isNaN(n) ? 0 : n;
+            };
+
+            const plan = parseNum(getField('vagas_planejadas', 'vagas_solicitadas', 'planejadas'));
+            const preen = parseNum(getField('vagas_preenchidas', 'vagas_reservadas', 'preenchidas'));
+            const livreRaw = getField('vagas_livres', 'livres');
+            const livres = livreRaw === '' ? Math.max(0, plan - preen) : parseNum(livreRaw);
+
+            return {
+                data: getField('data', 'date') || '-',
+                hora: getField('hora', 'time') || '-',
+                praca: getField('praca', 'cidade') || 'Não Informada',
+                planejadas: plan || (preen + livres),
+                preenchidas: preen,
+                livres: livres
+            };
+        }).filter(r => r.data !== '-' || r.praca !== 'Não Informada');
+    }
+
+    function calculateStatus(row) {
+        if (row.livres === 0) return { label: 'Preenchido', class: 'green' };
+        const taxa = row.planejadas > 0 ? (row.preenchidas / row.planejadas) : 0;
+        if (taxa < 0.7) return { label: 'Acionar Agora', class: 'red' };
+        return { label: 'Acompanhar', class: 'yellow' };
+    }
+
+    // --- UI Updates ---
+    function updateDashboard() {
+        populateFilters();
+        applyFilters();
+        updateStatusIndicator('Dados Sincronizados', 'online');
+    }
+
+    function populateFilters() {
+        const pracas = [...new Set(rawData.map(r => r.praca))].sort();
+        const datas = [...new Set(rawData.map(r => r.data))].sort();
+        
+        const pracaSelect = document.getElementById('filter-praca');
+        pracaSelect.innerHTML = '<option value="">Todas as Praças</option>' + pracas.map(p => `<option value="${p}">${p}</option>`).join('');
+        
+        const dataSelect = document.getElementById('filter-data');
+        dataSelect.innerHTML = '<option value="">Todas as Datas</option>' + datas.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
+
+    function applyFilters() {
+        const praca = document.getElementById('filter-praca').value;
+        const data = document.getElementById('filter-data').value;
+
+        filteredData = rawData.filter(r => 
+            (praca === '' || r.praca === praca) && 
+            (data === '' || r.data === data)
+        );
+
+        renderKPIs(
+            
+        );
+        renderTable();
+        renderChart();
+        updateDecisionEngine();
+        
+        // Limpar CX Module ao filtrar
+        document.getElementById('cx-var1').value = '';
+        document.getElementById('cx-var2').value = '';
+    }
+
+    function renderKPIs() {
+    // Filtra apenas o snapshot mais recente de cada praça/operação
+    const latestSnapshots = Object.values(filteredData.reduce((acc, row) => {
+        const key = row.praca + row.operacao;
+        // Assume que 'hora' é ordenável (ex: "15:00", "15:30")
+        if (!acc[key] || row.hora > acc[key].hora) {
+            acc[key] = row;
+        }
+        return acc;
+    }, {}));
+
+    const plan = latestSnapshots.reduce((acc, curr) => acc + curr.planejadas, 0);
+    const preen = latestSnapshots.reduce((acc, curr) => acc + curr.preenchidas, 0);
+    const livres = latestSnapshots.reduce((acc, curr) => acc + curr.livres, 0);
+    const taxa = plan > 0 ? ((preen / plan) * 100).toFixed(1) : 0;
+
+    document.getElementById('val-planejadas').textContent = plan;
+    document.getElementById('val-preenchidas').textContent = preen;
+    document.getElementById('val-livres').textContent = livres;
+    document.getElementById('val-taxa').textContent = `${taxa}%`;
+
+    const cardLivres = document.getElementById('kpi-livres');
+    cardLivres.className = 'kpi-card ' + (livres > 0 ? 'urgent' : 'healthy');
+}
+
+    function renderTable() {
+        const tbody = document.querySelector('#data-table tbody');
+        tbody.innerHTML = filteredData.map(r => {
+            const status = calculateStatus(r);
+            return `
+                <tr>
+                    <td>${r.data}</td>
+                    <td>${r.hora}</td>
+                    <td>${r.praca}</td>
+                    <td>${r.planejadas}</td>
+                    <td>${r.preenchidas}</td>
+                    <td style="font-weight: bold; color: ${r.livres > 0 ? 'var(--ifood-red)' : 'var(--text)'}">${r.livres}</td>
+                    <td><span class="badge ${status.class}">${status.label}</span></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function renderChart() {
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        
+        // Agrupar vagas livres cronologicamente
+        const grouped = {};
+        filteredData.forEach(r => {
+            const key = `${r.data} ${r.hora}`;
+            grouped[key] = (grouped[key] || 0) + r.livres;
+        });
+
+        const labels = Object.keys(grouped);
+        const data = Object.values(grouped);
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Vagas Livres (Churn)',
+                    data: data,
+                    borderColor: '#ea1d2c',
+                    backgroundColor: 'rgba(234, 29, 44, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#09090b',
+                    pointBorderColor: '#ea1d2c',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#a1a1aa', font: { size: 10 } } },
+                    y: { beginAtZero: true, grid: { color: '#27272a' }, ticks: { color: '#a1a1aa', font: { size: 10 }, stepSize: 1 } }
+                }
+            }
+        });
+    }
+
+    // --- Business Logic & NLP ---
+    function updateDecisionEngine() {
+        const livres = filteredData.reduce((acc, curr) => acc + curr.livres, 0);
+        const box = document.getElementById('decision-box');
+        
+        if (filteredData.length === 0) {
+            box.innerHTML = `<span class="badge" style="background: var(--border); color: var(--muted);">Sem Dados</span><p style="margin-top: 10px; color: var(--muted); font-size: 13px;">Ajuste os filtros ou carregue uma base.</p>`;
+            return;
+        }
+
+        if (livres === 0) {
+            box.innerHTML = `<span class="badge green">Capacidade Preenchida</span><p style="margin-top: 10px; color: var(--muted); font-size: 13px;">Não realizar nova prospecção no momento. Operação rodando com 100% de ocupação.</p>`;
+        } else if (livres <= 2) {
+            box.innerHTML = `<span class="badge yellow">Acionamento Pontual</span><p style="margin-top: 10px; color: var(--text); font-size: 13px;">Recomendado o uso do <strong>Blip Desk</strong> para preenchimento de ${livres} vaga(s).</p>`;
+        } else {
+            box.innerHTML = `<span class="badge red">Prospecção Massiva</span><p style="margin-top: 10px; color: var(--text); font-size: 13px;">Volume alto (${livres} vagas). Recomendado disparo via <strong>Blip Portal</strong> para bases engajadas.</p>`;
+        }
+    }
+
+    function generateCXMessage() {
+        const pracas = [...new Set(filteredData.map(r => r.praca))];
+        const livres = filteredData.reduce((acc, curr) => acc + curr.livres, 0);
+        
+        const var1 = document.getElementById('cx-var1');
+        const var2 = document.getElementById('cx-var2');
+
+        if (pracas.length === 0) {
+            var1.value = "Nenhum dado selecionado.";
+            var2.value = "";
+            return;
+        }
+
+        const pracaText = pracas.length === 1 ? pracas[0] : 'nossas praças selecionadas';
+
+        if (livres > 0) {
+            var1.value = `Entendemos a sua expectativa de encontrar um horário disponível para rodar conosco hoje.`;
+            var2.value = `Ao verificarmos a operação de ${pracaText} neste momento, identificamos ${livres} vaga(s) disponível(is) no sistema.\n\nA disponibilidade pode mudar rapidamente, então recomendamos que acompanhe e tente realizar o agendamento diretamente pelo app.`;
+        } else {
+            var1.value = `Entendemos perfeitamente a sua expectativa de encontrar um horário disponível.`;
+            var2.value = `Ao verificarmos a operação de ${pracaText}, os slots do período analisado encontram-se totalmente preenchidos no momento.\n\nContinue acompanhando pelo app, pois novas vagas podem surgir em caso de cancelamentos de última hora.`;
+        }
+    }
+
+    // --- Data Ingestion ---
+    function loadMockData() {
+        const mockCSV = `data,hora,praca,vagas_solicitadas,vagas_reservadas
+2026-09-03,15:00,Brasília,12,9
+2026-09-03,15:30,Brasília,12,11
+2026-09-03,16:00,Brasília,12,12
+2026-09-03,15:00,Manaus,10,6
+2026-09-03,15:30,Manaus,10,8
+2026-09-03,16:00,Manaus,10,10`;
+        processCSV(mockCSV);
+    }
+
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        updateStatusIndicator('Processando Arquivo...', 'yellow');
+        Papa.parse(file, {
+            header: true, skipEmptyLines: true,
+            complete: (results) => processCSVData(results.data),
+            error: (err) => updateStatusIndicator(`Erro: ${err.message}`, 'red')
+        });
+    }
+
+    function fetchData() {
+        const url = document.getElementById('csv-url').value.trim();
+        if (!url) { alert("Insira uma URL válida."); return; }
+        updateStatusIndicator('Baixando dados via API...', 'yellow');
+        Papa.parse(url, {
+            download: true, header: true, skipEmptyLines: true,
+            complete: (results) => processCSVData(results.data),
+            error: () => updateStatusIndicator('Erro de CORS ou URL inválida', 'red')
+        });
+    }
+
+    function processCSV(csvString) {
+        Papa.parse(csvString, {
+            header: true, skipEmptyLines: true,
+            complete: (results) => processCSVData(results.data)
+        });
+    }
+
+    function processCSVData(data) {
+        try {
+            rawData = normalizeData(data);
+            updateDashboard();
+        } catch (e) {
+            updateStatusIndicator('Falha na Estrutura dos Dados', 'red');
+        }
+    }
+
+    function updateStatusIndicator(msg, type) {
+        const dot = document.getElementById('status-dot');
+        dot.className = 'dot';
+        if (type === 'online') dot.classList.add('online');
+        document.getElementById('status-text').textContent = msg;
+        if(type === 'red') dot.style.background = 'var(--ifood-red)';
+    }
+
+    function exportFilteredData() {
+        if (!filteredData.length) return;
+        const csv = Papa.unparse(filteredData);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "auditoria_slots.csv";
+        link.click();
+    }
+
+    // Inicialização silenciosa
+    document.getElementById('csv-url').value = '';
+</script>
+</body>
+</html>

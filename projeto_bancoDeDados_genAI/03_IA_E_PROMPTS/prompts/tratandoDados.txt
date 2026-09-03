@@ -1,0 +1,155 @@
+Prompt para tratar dados:
+
+Quero que a IA analise [tipo de feedback ou base de comentários] para identificar [principal objetivo da análise].
+
+O resultado será usado por [público ou área] para apoiar [decisão, melhoria ou ação].
+
+A entrega deve conter [formato esperado, como resumo, tabela, lista de insights ou recomendações].
+
+O resultado será considerado bom se [critério de qualidade, como clareza, utilidade, organização ou foco em ações].
+
+
+
+Preenchido:
+
+Quero que a IA analise comentários de clientes sobre atendimento digital de um banco para identificar reclamações frequentes, elogios e oportunidades de melhoria.
+
+O resultado será usado por uma equipe de experiência do cliente para apoiar melhorias no aplicativo e nos canais de atendimento.
+
+A entrega deve conter um resumo executivo, uma tabela com os principais temas, exemplos de comentários e recomendações práticas.
+
+O resultado será considerado bom se for claro, organizado, baseado nos comentários fornecidos e útil para priorizar ações.
+
+__________________________________________________________________________________________________________________________________________________________________
+
+Prompt para tratar dados com contexto e restrições
+
+Contexto: Estou trabalhando com feedbacks de clientes bancários relacionados a [produto, serviço ou canal].
+
+Dados disponíveis: A base contém [descreva campos, colunas ou exemplos de informações disponíveis].
+
+Critérios de análise: A IA deve classificar os feedbacks por [temas, sentimento, urgência, canal, produto ou outro critério].
+
+Cuidados e restrições:
+
+Use apenas os dados fornecidos.
+Não invente números, causas ou conclusões.
+Não exponha dados pessoais ou sensíveis.
+Se houver informação insuficiente, indique a limitação.
+Use linguagem [simples, executiva, técnica ou outro estilo].
+
+
+
+Preenchido:
+
+Contexto: Estou trabalhando com feedbacks de clientes bancários relacionados ao aplicativo, Pix, cartão de crédito e atendimento por chat.
+
+Dados disponíveis: A base contém data do comentário, canal de atendimento, texto do feedback, produto citado e nota de satisfação de 1 a 5.
+
+Critérios de análise: A IA deve classificar os feedbacks por tema, sentimento, urgência e possível impacto na experiência do cliente.
+
+Cuidados e restrições:
+
+Use apenas os dados fornecidos.
+Não invente números, causas ou conclusões.
+Não exponha dados pessoais ou sensíveis.
+Se houver informação insuficiente, indique a limitação.
+Use linguagem simples, direta e voltada para tomada de decisão.
+
+__________________________________________________________________________________________________________________________________________________________________
+
+Prompt tratando Dados Final
+
+Atue como [papel da IA, como analista de dados, analista de experiência do cliente ou consultor de negócios].
+
+Sua tarefa é analisar [tipo de feedback ou base de comentários] sobre [produto, serviço ou canal] para identificar [objetivo principal].
+
+Contexto: [explique o cenário, o público que usará a análise e a decisão que precisa ser apoiada].
+
+Dados disponíveis: [descreva os campos, colunas ou exemplos de informações que serão fornecidas].
+
+Instruções de análise:
+
+Classifique os feedbacks por [critérios de classificação].
+Identifique os principais padrões, problemas, elogios e oportunidades.
+Aponte evidências nos dados fornecidos.
+Sugira ações práticas para [público ou área responsável].
+Formato da resposta: [descreva o formato esperado, como resumo executivo, tabela, tópicos e recomendações].
+
+Restrições:
+
+Use apenas os dados fornecidos.
+Não invente números, causas ou conclusões.
+Não exponha dados pessoais ou sensíveis.
+Informe limitações quando os dados não forem suficientes.
+Use linguagem [estilo desejado].
+
+
+
+Preenchido (exemplo):
+
+Atue como analista de dados e experiência do cliente em um banco.
+
+Sua tarefa é analisar feedbacks de clientes sobre aplicativo bancário, Pix, cartão de crédito e atendimento por chat para identificar temas recorrentes, sentimento dos clientes e oportunidades de melhoria.
+
+Contexto: A análise será usada por uma equipe de experiência do cliente para priorizar melhorias nos canais digitais e reduzir atritos no atendimento. O foco é transformar comentários soltos em insights claros e acionáveis.
+
+Dados disponíveis: Serão fornecidos comentários com data, canal de atendimento, texto do feedback, produto citado e nota de satisfação de 1 a 5.
+
+Instruções de análise:
+
+Classifique os feedbacks por tema, sentimento, urgência e produto citado.
+Identifique os principais padrões, problemas, elogios e oportunidades.
+Aponte evidências nos dados fornecidos, usando exemplos curtos de comentários.
+Sugira ações práticas para a equipe de experiência do cliente e para o time responsável pelos canais digitais.
+Formato da resposta: Entregue um resumo executivo com até 5 linhas, uma tabela com tema, sentimento, evidência e ação sugerida, além de uma lista final com as 3 prioridades mais importantes.
+
+Restrições:
+
+Use apenas os dados fornecidos.
+Não invente números, causas ou conclusões.
+Não exponha dados pessoais ou sensíveis.
+Informe limitações quando os dados não forem suficientes.
+Use linguagem simples, direta e voltada para tomada de decisão.
+
+__________________________________________________________________________________________________________________________________________________________________
+
+
+Prompt Sênior: Arquitetura de Dados e Previsibilidade Logística
+
+Atue como um Engenheiro de Dados Sênior e Arquiteto de Soluções de Inteligência Artificial.
+
+Sua tarefa é analisar o fluxo de dados do processo de prospecção de entregadores no projeto "Rodar em Loja" (iFood) para identificar o modelo ideal de transição de um ecossistema de registros manuais para uma arquitetura de banco de dados orientada a eventos (time-series).
+
+Contexto: Atualmente, a operação de prospecção é registrada manualmente em uma planilha estática, geralmente com verificações às 16:00. No entanto, a disponibilidade de vagas (slots) logísticos é altamente volátil: novas lojas abrem vagas e entregadores cancelam agendamentos de última hora (churn) continuamente. O modelo manual atual gera retrabalho operacional, conflita com os horários de atendimento simultâneo na plataforma Blip Desk e, principalmente, causa cegueira de dados sobre os picos reais de ociosidade. A análise será usada pela coordenação de operações e pela equipe de dados para justificar a automação da captura desses dados via API do Grafana. O objetivo final de longo prazo é usar essa nova base estruturada para treinar modelos preditivos de Deep Learning que antecipem a abertura de vagas, otimizando o momento exato dos disparos de prospecção.
+
+Dados disponíveis:
+
+Modelo Estático Atual (CSV): Possui colunas de controle manual como Data, Hora (ex: 16:00), Região, Quantidade de slots disponiveis 2h antes, Quantidade de slots disponiveis após iniciar turno, Quantas mensagens disparadas?, e Quantas mensagens com falhas?.
+
+Modelo Dinâmico Alvo (Grafana): Possui metadados em tempo real como inicio_turno, fim_turno, regiao, vagas_solicitadas, vagas_reservadas e vagas_livres.
+
+Instruções de análise:
+
+Compare o custo de oportunidade e a perda de rastreabilidade (dados invisíveis) gerados pela coleta estática às 16:00 em relação à captura contínua do Grafana.
+
+Proponha um novo esquema (schema) de dados transacional focado em Séries Temporais, eliminando as colunas de "verificação manual" e inserindo rastreamento de ciclo de vida da vaga (abertura, preenchimento, cancelamento).
+
+Formule ao menos duas métricas analíticas novas, como "Taxa de Volatilidade de Slots" e "Tempo Médio de Preenchimento".
+
+Sugira uma rota técnica (roadmap) explicando como essa nova estrutura de dados servirá de base alimentar para um modelo de redes neurais recorrentes (como LSTM) para a previsão de demanda.
+
+Formato da resposta:
+Entregue um Resumo Executivo conciso da falha arquitetural atual. Em seguida, apresente uma tabela comparativa (De-Para) mostrando as colunas atuais do CSV versus as colunas propostas para o novo Data Warehouse. Finalize com um roadmap estruturado em tópicos descrevendo os passos desde a automação da ingestão (ETL) até o treinamento do modelo preditivo.
+
+Restrições:
+
+Use apenas as estruturas de dados e o cenário logístico fornecidos.
+
+Não invente volumes de dados, números estatísticos ou taxas falsas nas suas explicações; concentre-se na modelagem arquitetural.
+
+Não mencione ou exponha os nomes dos analistas presentes nos dados de origem.
+
+Informe as limitações se a volumetria inicial for um impeditivo momentâneo para o treinamento do Deep Learning.
+
+Use linguagem técnica, direta, com autoridade de engenharia de software, focada em eficiência operacional e ciência de dados.

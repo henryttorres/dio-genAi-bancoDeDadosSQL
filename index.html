@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="System.Monitor_Slots: Engenharia de Dados, observabilidade de slots e CX preditivo.">
+  <title>System.Monitor_Slots</title>
+  <style>
+    :root { --bg:#0b0d12; --card:#151922; --border:#29303d; --text:#f7f7f8; --muted:#a7afbd; --red:#ea1d2c; --green:#22c55e; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:Segoe UI,Arial,sans-serif; line-height:1.6; }
+    a { color:inherit; }
+    .wrap { width:min(1120px, calc(100% - 32px)); margin:auto; }
+    header { border-bottom:1px solid var(--border); background:rgba(11,13,18,.96); position:sticky; top:0; z-index:5; }
+    nav { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { font-weight:800; letter-spacing:.02em; text-decoration:none; }
+    .brand span { color:var(--red); }
+    .links { display:flex; gap:18px; }
+    .links a { color:var(--muted); text-decoration:none; font-size:14px; }
+    .hero { padding:92px 0 64px; display:grid; grid-template-columns:1.4fr .8fr; gap:34px; align-items:center; }
+    .eyebrow { color:#ff6570; font-weight:800; letter-spacing:.12em; font-size:12px; }
+    h1 { font-size:clamp(38px,6vw,70px); line-height:1.04; margin:14px 0 20px; }
+    h1 span { color:var(--red); }
+    .lead { max-width:720px; color:var(--muted); font-size:18px; }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+    .btn { display:inline-block; padding:12px 18px; border-radius:10px; background:var(--red); text-decoration:none; font-weight:750; }
+    .btn.alt { background:transparent; border:1px solid var(--border); }
+    .status { background:linear-gradient(145deg,#181d27,#11151d); border:1px solid var(--border); border-radius:18px; padding:24px; }
+    .status-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); }
+    .status-row:last-child { border:0; }
+    .ok { color:var(--green); font-weight:800; }
+    section { padding:60px 0; }
+    h2 { font-size:30px; margin:0 0 10px; }
+    .section-lead { color:var(--muted); max-width:760px; margin-bottom:28px; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:15px; padding:22px; }
+    .card strong { color:#ff7a83; }
+    .card p, .card li { color:var(--muted); }
+    .flow { background:#090b10; border:1px solid var(--border); border-radius:14px; padding:20px; overflow:auto; color:#d7dce5; white-space:pre; }
+    .rules { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .rule { text-align:center; }
+    .rule b { display:block; font-size:24px; color:#ff6570; }
+    footer { padding:34px 0; border-top:1px solid var(--border); color:var(--muted); }
+    @media(max-width:800px){ .hero,.grid,.rules{grid-template-columns:1fr}.links{display:none}.hero{padding-top:60px}.status{order:2} }
+  </style>
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <a class="brand" href="#inicio">System.<span>Monitor_Slots</span></a>
+    <div class="links"><a href="#solucao">Solução</a><a href="#regras">Regras</a><a href="#roadmap">Roadmap</a><a href="#seguranca">Segurança</a></div>
+  </nav>
+</header>
+<main id="inicio" class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">ENGENHARIA DE DADOS • CX PREDITIVO</div>
+      <h1>Observabilidade para decisões <span>mais inteligentes</span>.</h1>
+      <p class="lead">MVP para transformar o acompanhamento manual de slots em um fluxo orientado a dados, com ingestão CSV, regras operacionais, visualização local e preparação para Google Sheets, Grafana e modelos Time-Series.</p>
+      <div class="actions"><a class="btn" href="#solucao">Conhecer o projeto</a><a class="btn alt" href="projeto_bancoDeDados_genAI/README.md">Abrir documentação</a></div>
+    </div>
+    <aside class="status">
+      <div class="status-row"><span>Status</span><span class="ok">MVP operacional</span></div>
+      <div class="status-row"><span>Ingestão</span><span>CSV / API</span></div>
+      <div class="status-row"><span>Processamento</span><span>Python</span></div>
+      <div class="status-row"><span>Visualização</span><span>Local / Grafana</span></div>
+      <div class="status-row"><span>Decisão</span><span>Agente Cowork</span></div>
+    </aside>
+  </section>
+
+  <section id="solucao">
+    <h2>Da planilha estática à observabilidade contínua</h2>
+    <p class="section-lead">O projeto reduz a cegueira temporal, registra o estado da operação e organiza as informações necessárias para decisões de prospecção mais rápidas, rastreáveis e seguras.</p>
+    <div class="grid">
+      <article class="card"><strong>01. Engenharia de Dados</strong><h3>Ingestão e normalização</h3><p>Importação CSV, preparação para API, padronização de datas, horários, praças, lojas, turnos e vagas.</p></article>
+      <article class="card"><strong>02. Operação</strong><h3>Motor de regras</h3><p>Validação de elegibilidade, soma por praça e recomendação transparente entre Blip Desk e Blip Portal.</p></article>
+      <article class="card"><strong>03. Experiência</strong><h3>CX humanizado</h3><p>Guardrails para comunicações claras, acolhedoras e baseadas somente em informações efetivamente validadas.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fluxo arquitetural</h2>
+    <p class="section-lead">Uma arquitetura progressiva, preparada para evoluir do MVP local até uma camada preditiva.</p>
+    <div class="flow">CSV ou API → Python → Normalização → Snapshots e eventos → Sheets/Banco → Grafana → Motor de decisão → Blip</div>
+  </section>
+
+  <section id="regras">
+    <h2>Regras operacionais do MVP</h2>
+    <p class="section-lead">O turno precisa possuir vagas e mais de 1h30 até o encerramento. A decisão considera a soma das lojas elegíveis da mesma praça e do mesmo dia.</p>
+    <div class="rules">
+      <article class="card rule"><b>0</b><h3>Sem vagas</h3><p>Não acionar.</p></article>
+      <article class="card rule"><b>1 a 2</b><h3>Vagas elegíveis</h3><p>Recomendar Blip Desk.</p></article>
+      <article class="card rule"><b>3+</b><h3>Vagas elegíveis</h3><p>Recomendar Blip Portal.</p></article>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <h2>Roadmap</h2>
+    <div class="grid">
+      <article class="card"><h3>MVP</h3><ul><li>Importação CSV</li><li>Dashboard local</li><li>Indicadores</li><li>Recomendação de canal</li></ul></article>
+      <article class="card"><h3>Integração</h3><ul><li>API operacional</li><li>Google Sheets</li><li>Grafana</li><li>Logs e histórico</li></ul></article>
+      <article class="card"><h3>Evolução preditiva</h3><ul><li>Base Time-Series</li><li>Engenharia de atributos</li><li>Modelo LSTM</li><li>Agente cowork</li></ul></article>
+    </div>
+  </section>
+
+  <section id="seguranca">
+    <h2>Segurança e uso responsável</h2>
+    <p class="section-lead">Nenhum dado pessoal, token, credencial, chave de API ou informação corporativa restrita deve ser publicado. O MVP recomenda ações, mas mantém a validação humana antes de qualquer comunicação.</p>
+  </section>
+</main>
+<footer><div class="wrap"><strong>Henry Torres Batista</strong><br>Business Process Outsourcing, Data Analytics, Engenharia de Prompts e Automação de Processos.</div></footer>
+</body>
+</html>
