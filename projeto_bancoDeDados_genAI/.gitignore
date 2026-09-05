@@ -1,0 +1,17 @@
+# Dados gerados localmente pelo dashboard
+data/base_grafana.csv
+06_SOLUCAO_EXECUTAVEL/rodar_em_loja_automation/data/base_grafana.csv
+
+# Ambientes e arquivos locais
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Credenciais e configurações privadas
+.env
+.env.*
+!.env.example
+credentials.json
+*.pem
+*.key
